@@ -17,7 +17,7 @@
     <security:http pattern="/plugins/**" security="none"/>
     <security:http pattern="/starter/**" security="none"/>
 
-    <security:http auto-config="true">
+    <security:http auto-config="true" create-session="ifRequired" >
         <security:intercept-url pattern="/login**" access="permitAll"/>
 
         <security:intercept-url pattern="/**" access="!anonymous"/>
@@ -26,7 +26,12 @@
         <security:logout logout-url="/j_spring_cas_security_logout"/>
         <security:remember-me remember-me-parameter="remember_me"/>
         <security:csrf disabled="true"/>
+        <security:custom-filter ref="jwtAuthorizationFilter" before="BASIC_AUTH_FILTER"/>
     </security:http>
+    <bean id="jwtAuthorizationFilter" class="org.cboard.security.cvicse.JwtAuthorizationFilter">
+        <property name="signingKey" value="${jwt.signing-key}" />
+        <property name="mode" value="${jwt.mode}" />
+    </bean>
 
     <security:authentication-manager alias="authenticationManager">
         <security:authentication-provider ref="shareAuthenticationProviderDecorator"/>
