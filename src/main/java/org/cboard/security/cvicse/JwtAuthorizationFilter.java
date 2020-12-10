@@ -53,7 +53,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	        filterChain.doFilter(request, response);
     	} catch (AuthenticationException failed) {
 			SecurityContextHolder.clearContext();
-			throw new ServletException(failed);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, failed.getMessage());
 		}
     }
 
